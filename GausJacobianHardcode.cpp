@@ -6,24 +6,25 @@ using namespace std;
 void Printe();
 void pivot(int);
 void Gaus();
-void Jacobian();
+void Guass_Jacobian();
 int const L = 3;
 double SystEqu[L][L] = { { 3,-.1,-.2 },{ .1,7,-.3 },{ .3,-.2,10 } };
 double SystAnsw[L] = { 7.85,-19.3,71.4 };
 double Xn[L] = { 0,0,0 };
 int main()
 {
-	Jacobian();
+	Guass_Jacobian();
 }
 
 
-
-void Jacobian()
+//other project
+void Guass_Jacobian()
 {
 	double factor = 0;
 	double error = 1;
 	const int N = 100;
 	int n = 0;
+	bool Guasssidel = true; // guassidel or jacobian
 	double x1[N][L];
 	x1[0][0] = 1;
 	x1[1][0] = 1;
@@ -39,7 +40,7 @@ void Jacobian()
 					if (r == i)
 						cout << ' ';
 					else
-						if(i<r)
+						if(i<r&&Guasssidel)
 							x1[r][n + 1] -= SystEqu[r][i] * x1[i][n+1] / SystEqu[r][r];
 						else
 						x1[r][n + 1] -= SystEqu[r][i]*x1[i][n]/SystEqu[r][r];
@@ -143,38 +144,3 @@ void Printe()
 		cout << "   " << SystAnsw[r] << endl;
 	}
 }
-/*#include <string>
-#include <vector>
-#include <iostream>
-#include <map>
-using namespace std;
-void Printe();
-void pivot(int);
-void Gaus();
-void Jacobian();
-int const n = 3;
-double SystEqu[n][n] = { { 3,-.1,-.2 },{ .1,7,-.3 },{ .3,-.2,10 } };
-double SystAnsw[n] = { 7.55,-19.3,71.4 };
-double Xn[n] = { { 0,0,0 },{0,0,0},{0,0,0} };
-int main()
-{
-Jacobian();
-}
-
-
-
-void Jacobian()
-{
-bool error = true;
-const int N = 100;
-int n = 0;
-vector <double> x1(N), x2(N), x3(N);
-while (n < N && error)
-{
-for(int varcount=0;varcount<n;varcount++)
-for (int r = 0; r < n; r++)
-x[varcount][n + 1] = -SystEqu[r][1]*x2[n] / SystEqu [r][0]-SystEqu[r][2]*x3[n] / SystEqu[r][0] + SystAnsw[r] / SystEqu[r][0];
-
-
-}
-}*/
