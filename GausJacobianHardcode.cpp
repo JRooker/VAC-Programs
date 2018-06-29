@@ -20,26 +20,37 @@ int main()
 
 void Jacobian()
 {
-	
-	bool error = true;
-	const int N = 1000;
+	double factor = 0;
+	double error = 1;
+	const int N = 100;
 	int n = 0;
-	vector <double> x1(N), x2(N), x3(N);
-	x1[0] = 2;
-	x2[0] = -2.5;
-	x3[0] = 7;
-	while (n < N-1 && error)
+	double x1[N][L];
+	x1[0][0] = 1;
+	x1[1][0] = 1;
+	x1[2][0] = 1;
+	while (n < N - 1 && error >= pow(10, -19))
 	{
-		int r = 0;
-			x1[n + 1] = -SystEqu[r][1] * x2[n] / SystEqu[r][0] - SystEqu[r][2] * x3[n] / SystEqu[r][0] + SystAnsw[r] / SystEqu[r][0];
-			r = 1;
-			x2[n + 1] = -SystEqu[r][0] * x1[n] / SystEqu[r][1] - SystEqu[r][2] * x3[n] / SystEqu[r][1] + SystAnsw[r] / SystEqu[r][1];
-			r = 2;
-			x3[n + 1] = -SystEqu[r][0] * x1[n] / SystEqu[r][2] - SystEqu[r][1] * x2[n] / SystEqu[r][2] + SystAnsw[r] / SystEqu[r][2];
+
+		for (int r = 0; r < L; r++)
+		{
+			x1[r][n+1] = SystAnsw[r] / SystEqu[r][r];
+				for(int i = 0; i < L; i++)
+				{
+					if (r == i)
+						cout << ' ';
+					else
+						if(i<r)
+							x1[r][n + 1] -= SystEqu[r][i] * x1[i][n+1] / SystEqu[r][r];
+						else
+						x1[r][n + 1] -= SystEqu[r][i]*x1[i][n]/SystEqu[r][r];
+				}
+		}
+		error = (abs(x1[0][n + 1] - x1[0][n]) + abs(x1[1][n + 1] - x1[1][n]) + abs(x1[2][n + 1] - x1[2][n])) / (double)L;
+		cout << "error  " << error << ",  N " << n << ": " << x1[0][n] << " " << x1[1][n] << " " << x1[2][n] << "  top part " << abs(x1[0][n + 1] - x1[0][n]) + abs(x1[1][n + 1] - x1[1][n]) + abs(x1[2][n + 1] - x1[2][n]) << endl;
+
 		n++;
-		cout <<"N "<< n<< ": " << x1[n] << " " << x2[n] << " " << x3[n] << endl;
+
 	}
-	cout << x1[N - 1] << " " << x2[N - 1] << " " << x3[N - 1];
 	int q;
 	cin >> q;
 }
@@ -50,13 +61,13 @@ void Gaus()
 	cout << endl;
 	/*for (int r = 0; r < n; r++)
 	{
-		SystAnsw[r] /= SystEqu[r][r];
-		for (int c = 0; c < n; c++)
-		{
-			SystEqu[r][c] /= SystEqu[r][r];//makes the diagonal 1
-		}
+	SystAnsw[r] /= SystEqu[r][r];
+	for (int c = 0; c < n; c++)
+	{
+	SystEqu[r][c] /= SystEqu[r][r];//makes the diagonal 1
 	}
-		cout << "ones update" << endl;
+	}
+	cout << "ones update" << endl;
 
 	Printe();
 	cout<<endl<<endl;*/
@@ -77,9 +88,9 @@ void Gaus()
 		}
 	}
 	double sum;
-	if(SystEqu[L - 1][L - 1] == 0)
-		cout<<"This matrix will not work"<<endl;
-	Xn[L-1] = SystAnsw[L-1] / SystEqu[L-1][L-1];
+	if (SystEqu[L - 1][L - 1] == 0)
+		cout << "This matrix will not work" << endl;
+	Xn[L - 1] = SystAnsw[L - 1] / SystEqu[L - 1][L - 1];
 	for (int i = L - 2; i >= 0; i--)
 	{
 		sum = SystAnsw[i];
@@ -109,7 +120,7 @@ void pivot(int k)
 		}
 	if (holdi == -1)
 		return;
-	cout << "K = " << k<< ", THE bigges element under " << SystEqu[k][k] << " is " << max << ", at positioni " << holdi;
+	cout << "K = " << k << ", THE bigges element under " << SystEqu[k][k] << " is " << max << ", at positioni " << holdi;
 	for (int c = 0; c < L; c++)
 	{
 		temp = SystEqu[k][c];
@@ -129,7 +140,7 @@ void Printe()
 	for (int r = 0; r < L; r++) {
 		for (int c = 0; c < L; c++)
 			cout << SystEqu[r][c] << " ";
-		cout << "   " <<SystAnsw[r]<<endl;
+		cout << "   " << SystAnsw[r] << endl;
 	}
 }
 /*#include <string>
@@ -147,23 +158,23 @@ double SystAnsw[n] = { 7.55,-19.3,71.4 };
 double Xn[n] = { { 0,0,0 },{0,0,0},{0,0,0} };
 int main()
 {
-	Jacobian();
+Jacobian();
 }
 
 
 
 void Jacobian()
 {
-	bool error = true;
-	const int N = 100;
-	int n = 0;
-	vector <double> x1(N), x2(N), x3(N);
-	while (n < N && error)
-	{
-		for(int varcount=0;varcount<n;varcount++)
-		for (int r = 0; r < n; r++)
-		x[varcount][n + 1] = -SystEqu[r][1]*x2[n] / SystEqu [r][0]-SystEqu[r][2]*x3[n] / SystEqu[r][0] + SystAnsw[r] / SystEqu[r][0];
+bool error = true;
+const int N = 100;
+int n = 0;
+vector <double> x1(N), x2(N), x3(N);
+while (n < N && error)
+{
+for(int varcount=0;varcount<n;varcount++)
+for (int r = 0; r < n; r++)
+x[varcount][n + 1] = -SystEqu[r][1]*x2[n] / SystEqu [r][0]-SystEqu[r][2]*x3[n] / SystEqu[r][0] + SystAnsw[r] / SystEqu[r][0];
 
-		
-	}
+
+}
 }*/
